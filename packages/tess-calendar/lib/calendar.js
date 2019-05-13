@@ -7,46 +7,55 @@ const moment = require('moment');
 moment.locale('pt-BR');
 const readFile = promisify(fs.readFile);
 
-const getWeekHtml = async (events) => {
-    events = await _parseEvents(events);
-    const html = await readFile(`${path.join(__dirname, '../','assets/nextWeekCalendar.html')}`, {encoding: 'utf8'});
-    const css = await readFile(`${path.join(__dirname, '../','assets/nextWeekCalendar.css')}`, {encoding: 'utf8'});
+const getWeekHtml = async events => {
+    const html = await readFile(`${path.join(__dirname, '../', 'assets/nextWeekCalendar.html')}`, {encoding: 'utf8'});
+    const css = await readFile(`${path.join(__dirname, '../', 'assets/theme.css')}`, {encoding: 'utf8'});
 
     let doc = domino.createDocument(html);
-    let style = doc.createElement('style');
-    style.innerHTML = css;
     let head = doc.querySelector('head');
-    head.appendChild(style)
-
+    let style = doc.createElement('style');
     let calendar = doc.querySelector('.calendar');
-    events.map((day, key) => {
+    style.innerHTML = css;
+    head.appendChild(style);
+
+    (await _parseEvents(events)).map(day => {
         let column = doc.createElement('div');
         column.classList.add('day-column');
+
         let header = doc.createElement('div');
         column.appendChild(header);
         header.classList.add('day-header');
-        header.innerHTML =`<div>${day.weekday}</div><div>${key}</div>`;
-        day.events.map((event) => {
+        header.innerHTML = `
+          <span class="week-day">${day.weekday}</span>
+          <span class="day-number">${day.dayNumber}</span>
+        `;
+
+        day.events.map(event => {
             let eventDiv = doc.createElement('div');
             eventDiv.classList.add('event');
+
             // Add Title
             let eventTitle = doc.createElement('div');
             eventTitle.classList.add('event-title');
             eventDiv.appendChild(eventTitle);
+            if (event.title.toLowerCase().indexOf('bekz') !== -1) {
+              eventTitle.classList.add('green');
+            }
+            if (event.title.toLowerCase().indexOf('reunião') !== -1) {
+              eventTitle.classList.add('yellow');
+            }
             eventTitle.innerHTML = event.title;
-            // Add date
-            let eventDate = doc.createElement('div');
-            eventDate.classList.add('event-date');
-            eventDiv.appendChild(eventDate);
-            eventDate.innerHTML = event.date;
+
             // Add time
             let eventTime = doc.createElement('div');
             eventTime.classList.add('event-time');
             eventDiv.appendChild(eventTime);
             eventTime.innerHTML = event.time;
+
             // Append to column
             column.appendChild(eventDiv);
         });
+
         calendar.appendChild(column);
     });
 
