@@ -9,7 +9,7 @@ const _createRenderer = async () => {
     return renderer;
 }
 
-const nextWeekImage = async (auth) => {
+const nextWeekImage = async auth => {
     const renderer = await _createRenderer();
     let events = await googleApi.getNextWeek(auth);
     let html = await calendar.getWeekHtml(events);
@@ -19,12 +19,12 @@ const nextWeekImage = async (auth) => {
     return image;
 }
 
-const nextWeekHtml = async (auth) => {
+const nextWeekHtml = async auth  => {
     let events = await googleApi.getNextWeek(auth);
     return await calendar.getWeekHtml(events);
 }
 
-const nextMeetingLink = async (auth) => {
+const nextMeetingLink = async auth => {
     let meetingLink = await googleApi.getNextMeetingLink(auth);
     return meetingLink;
 }
