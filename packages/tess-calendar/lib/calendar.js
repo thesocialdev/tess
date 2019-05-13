@@ -53,18 +53,31 @@ const getWeekHtml = async (events) => {
     return doc.innerHTML;
 }
 
-const _parseEvents = async (events) => {
-    let parsedEvents = [];
-    events.map((event) => {
-        const weekday_number = moment(event.start.dateTime).format('D');
-        parsedEvents[weekday_number] = parsedEvents[weekday_number] || { weekday: moment(event.start.dateTime).format('ddd'), events: [] };
-        parsedEvents[weekday_number].events.push({
-            title: event.summary,
-            date: moment(event.start.dateTime).format('dddd, D [de] MMMM'),
-            time: `${moment(event.start.dateTime).format('HH:mm')} até ${moment(event.end.dateTime).format('HH:mm')}`,
-        })
+const _parseEvents = async events => {
+  let parsedEvents = [];
+
+  events.map(event => {
+    const start = event.start.dateTime;
+    const end = event.end.dateTime;
+
+    const day = moment(start).format('DD');
+    const month = moment(start).format('MM');
+    const year = moment(start).format('Y');
+    const index = `${year}${month}${day}`;
+
+    parsedEvents[index] = parsedEvents[index] || {
+      weekday: moment(start).format('ddd'),
+      dayNumber: day,
+      events: []
+    };
+
+    parsedEvents[index].events.push({
+      title: event.summary,
+      time: `${moment(start).format('HH:mm')} às ${moment(end).format('HH:mm')}`
     });
-    return parsedEvents;
+  });
+
+  return parsedEvents;
 }
 
 module.exports = {
