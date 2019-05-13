@@ -31,7 +31,7 @@ logging:
 services:
   - name: tess
     module: app.js
-    conf: 
+    conf:
       port: 3000
   - name: tess-telegraf
     module: modules/telegraf/app.js
