@@ -11,10 +11,10 @@
   "main": "index.js",
   "userstyle": {
     "name": "Tess",
-    "namespace": "https://github.com/thiagobraga",
-    "homepageURL": "https://github.com/thiagobraga/tess",
-    "supportURL": "https://github.com/thiagobraga/tess/issues",
-    "updateBaseURL": "https://github.com/thiagobraga/tess/raw/master/release/",
+    "namespace": "https://github.com/OpenTesseract",
+    "homepageURL": "https://github.com/OpenTesseract/tess",
+    "supportURL": "https://github.com/OpenTesseract/tess/issues",
+    "updateBaseURL": "https://github.com/OpenTesseract/tess/raw/master/packages/tess-calendar/assets/",
     "match": {
       "domain": "local.tess"
     }
