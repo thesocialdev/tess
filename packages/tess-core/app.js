@@ -31,7 +31,7 @@ const loadRoutes = (app, dir) => {
 function createServer(app) {
     return new Promise((resolve, reject) => {
         app.listen(app.config.port);
-        app.logger.log('info', 
+        app.logger.log('info',
             `${app.serviceName} with PID ${process.pid} listening on ${app.config.interface || '*'}:${app.config.port}`);
         resolve(app);
     });

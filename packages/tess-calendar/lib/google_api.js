@@ -2,18 +2,25 @@ const {google} = require('googleapis');
 
 const getNextWeek = async (auth) => {
     const calendar = google.calendar({version: 'v3', auth});
+
     try {
+        var today     = new Date;
+        var first     = today.getDate() - today.getDay();
+        var last      = first + 6;
+        var weekStart = new Date(today.setDate(first));
+        var weekEnd   = new Date(today.setDate(last));
+
         const res = await calendar.events.list({
             calendarId: 'tesseractgrupo@gmail.com',
-            timeMin: (new Date()).toISOString(),
-            //TODO define timeMax to the last day of the week and remove maxResults
-            maxResults: 10,
+            timeMin: weekStart,
+            timeMax: weekEnd,
             singleEvents: true,
             orderBy: 'startTime',
         });
 
         const events = res.data.items;
-          if (events.length) {
+
+        if (events.length) {
             return events;
         } else {
             console.log('No upcoming events found.');

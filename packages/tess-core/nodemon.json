@@ -1,0 +1,12 @@
+{
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "events": {
+    "start": "cls || clear"
+  },
+  "signal": "SIGHUP",
+  "ext": "js",
+  "watch": ["../../"],
+  "exec": "node --inspect server.js"
+}

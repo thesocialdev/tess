@@ -9,10 +9,23 @@
     "url": "https://github.com/OpenTesseract/tess"
   },
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
+  "userstyle": {
+    "name": "Tess",
+    "namespace": "https://github.com/OpenTesseract",
+    "homepageURL": "https://github.com/OpenTesseract/tess",
+    "supportURL": "https://github.com/OpenTesseract/tess/issues",
+    "updateBaseURL": "https://github.com/OpenTesseract/tess/raw/master/packages/tess-calendar/assets/",
+    "match": {
+      "domain": "local.tess"
+    }
   },
   "devDependencies": {
-    "lerna": "^3.13.1"
+    "autoprefixer": "^9.5.1",
+    "chokidar-cli": "^1.2.2",
+    "cssnano": "^4.1.10",
+    "lerna": "^3.13.1",
+    "postcss-cli": "^6.1.2",
+    "sass": "^1.20.1",
+    "userstyle-gen": "^0.1.2"
   }
 }
