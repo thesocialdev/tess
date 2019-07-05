@@ -65,26 +65,28 @@ const getWeekHtml = async events => {
 const _parseEvents = async events => {
   let parsedEvents = [];
 
-  events.map(event => {
-    const start = event.start.dateTime;
-    const end = event.end.dateTime;
-
-    const day = moment(start).format('DD');
-    const month = moment(start).format('MM');
-    const year = moment(start).format('Y');
-    const index = `${year}${month}${day}`;
-
-    parsedEvents[index] = parsedEvents[index] || {
-      weekday: moment(start).format('ddd'),
-      dayNumber: day,
-      events: []
-    };
-
-    parsedEvents[index].events.push({
-      title: event.summary,
-      time: `${moment(start).format('HH:mm')} às ${moment(end).format('HH:mm')}`
+  if (events) {
+    events.map(event => {
+      const start = event.start.dateTime;
+      const end = event.end.dateTime;
+  
+      const day = moment(start).format('DD');
+      const month = moment(start).format('MM');
+      const year = moment(start).format('Y');
+      const index = `${year}${month}${day}`;
+  
+      parsedEvents[index] = parsedEvents[index] || {
+        weekday: moment(start).format('ddd'),
+        dayNumber: day,
+        events: []
+      };
+  
+      parsedEvents[index].events.push({
+        title: event.summary,
+        time: `${moment(start).format('HH:mm')} às ${moment(end).format('HH:mm')}`
+      });
     });
-  });
+  }
 
   return parsedEvents;
 }

@@ -19,6 +19,11 @@
       "domain": "local.tess"
     }
   },
+  "scripts": {
+    "start": "cd packages/tess-core && npm start",
+    "bootstrap": "lerna bootstrap",
+    "postinstall": "yarn bootstrap"
+  },
   "devDependencies": {
     "autoprefixer": "^9.5.1",
     "chokidar-cli": "^1.2.2",
