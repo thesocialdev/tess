@@ -1,0 +1,9 @@
+[build]
+  functions = ".netlify/built-functions"
+  publish = "public"
+[template.environment]
+  TELEGRAM_BOT_TOKEN = "894895447:AAEj8-P2lWPg0CbLUtuwzjS2o4jfcg5HWC4"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/built-functions/:splat"
+  status = 200
