@@ -6,7 +6,6 @@
   "license": "ISC",
   "main": "index.js",
   "dependencies": {
-    "telegraf": "^3.28.0",
-    "tess-calendar": "^0.0.1"
+    "telegraf": "^3.28.0"
   }
 }

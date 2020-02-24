@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {
-    "netlify": "netlify-lambda",
-    "start": "netlify-lambda serve functions",
-    "build": "netlify-lambda build functions"
-  },
   "dependencies": {
-    "netlify-lambda": "^1.6.3",
+    "js-yaml": "^3.13.1",
+    "parcel-bundler": "^1.12.4",
     "telegraf": "^3.36.0"
+  },
+  "scripts": {
+    "build": "parcel build functions/bot.js --out-dir build/functions",
+    "parcel-bundler": "^1.12.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.8.3"
