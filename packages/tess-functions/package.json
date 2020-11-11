@@ -1,6 +1,6 @@
 {
   "name": "tess-functions",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
@@ -8,11 +8,9 @@
     "parcel-bundler": "^1.12.4",
     "telegraf": "^3.36.0"
   },
-  "scripts": {
-    "build": "parcel build functions/bot.js --out-dir build/functions",
-    "parcel-bundler": "^1.12.4"
-  },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.8.3"
+    "@babel/preset-typescript": "^7.8.3",
+    "tess-calendar": "0.0.1",
+    "tess-nlp": "0.0.1"
   }
 }

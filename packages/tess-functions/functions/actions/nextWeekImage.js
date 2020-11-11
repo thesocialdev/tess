@@ -1,9 +1,10 @@
 const calendar = require('tess-calendar');
 const fs = require('fs');
 const path = require('path');
-const basedir = path.join(__dirname, "../../..", "/static");
-const GCALENDAR_CREDENTIALS = path.join(__dirname, "../../..", "/credentials.json");
-const GCALENDAR_TOKEN = path.join(__dirname, "../../..", "/token.json");
+const basedir = path.join(__dirname, "../../", "/dist");
+const GCALENDAR_CREDENTIALS = path.join(__dirname, "../../", "/credentials.json");
+console.log(__dirname)
+const GCALENDAR_TOKEN = path.join(__dirname, "../../", "/token.json");
 
 module.exports = async (ctx, params) => {
     const auth = await calendar.authenticate(GCALENDAR_CREDENTIALS, GCALENDAR_TOKEN);
