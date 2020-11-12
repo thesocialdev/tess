@@ -267,3 +267,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/vim,node,emacs,linux,macos,windows,sublimetext,visualstudiocode
+
+.idea
+
+../tess-config/credentials.json
+../tess-config/token.json
