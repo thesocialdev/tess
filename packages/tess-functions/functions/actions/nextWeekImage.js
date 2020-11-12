@@ -1,23 +1,49 @@
-const calendar = require('tess-calendar');
-const fs = require('fs');
-const path = require('path');
-const basedir = path.join(__dirname, "../../", "/dist");
-const GCALENDAR_CREDENTIALS = path.join(__dirname, "../../", "/credentials.json");
-console.log(__dirname)
-const GCALENDAR_TOKEN = path.join(__dirname, "../../", "/token.json");
+const RendererFactory = require('../../lib/renderer');
+const { getWeekHtml } = require('../../lib/calendar/weekHtml');
+const authenticate = require('../../lib/auth');
+const sendImage = require('../../lib/telegram/sendImage')
+const {google} = require('googleapis');
+
+const getEvents = (auth, calendarList) => {
+  const calendar = google.calendar({version: 'v3', auth});
+  const today = new Date();
+  const first = today.getDate() - today.getDay();
+  const last = first + 6;
+  return Promise.all(calendarList.map(async (calendarId) => {
+    return calendar.events.list({
+      calendarId,
+      timeMin: new Date(today.setDate(first)),
+      timeMax: new Date(today.setDate(last)),
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
+  }));
+}
+
+const getNextWeekImage = async (auth, calendarList = []) => {
+  try {
+    const res = await getEvents(auth, calendarList);
+    const events = res.reduce((acc, response) => {
+      const items = response.data && response.data.items || [];
+      return [...acc, ...items];
+    }, []);
+
+    if (events.length) {
+      const renderer = await RendererFactory.create();
+      let html = await getWeekHtml(events);
+      const image = await renderer.pageToPng(html, { fullPage: true });
+      renderer.close();
+      return image;
+    } else {
+      console.log('No upcoming events found.');
+    }
+  } catch (err) {
+    if (err) return console.log('The API returned an error: ' + err);
+  }
+}
 
 module.exports = async (ctx, params) => {
-    const auth = await calendar.authenticate(GCALENDAR_CREDENTIALS, GCALENDAR_TOKEN);
-    const image = await calendar.nextWeekImage(auth);
-    fs.writeFile(`${basedir}/week_calendar.png`, image, 'base64', function(err){
-        if (err) console.log(err);
-    });
-    if (params && params.length) { // Sending a scheduled message
-        await ctx.telegram.sendMessage(params.chatId, params.msg);
-        await ctx.telegram.sendChatAction(params.chatId, 'upload_photo')
-        await ctx.telegram.sendPhoto(params.chatId, {source: `${basedir}/week_calendar.png`})
-    } else { // Replying to a request
-        await ctx.replyWithChatAction('upload_photo')
-        await ctx.replyWithPhoto({source: `${basedir}/week_calendar.png`})
-    }
+    const auth = await authenticate(ctx.google.credentials, ctx.google.token);
+    const image = await getNextWeekImage(auth, ctx.google.calendarList);
+    await sendImage(ctx, params, image);
 }

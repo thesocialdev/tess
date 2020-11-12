@@ -1,13 +1,37 @@
-const calendar = require('tess-calendar');
-const fs = require('fs');
-const path = require('path');
-const basedir = path.join(__dirname, "../../..", "/static");
-const GCALENDAR_CREDENTIALS = path.join(__dirname, "../../", "/credentials.json");
-const GCALENDAR_TOKEN = path.join(__dirname, "../../", "/token.json");
+const authenticate = require('../../lib/auth');
+const {google} = require('googleapis');
+
+const getNextMeetingLink = async (auth) => {
+  const calendar = google.calendar({version: 'v3', auth});
+  try {
+    const res = await calendar.events.list({
+      calendarId: 'tesseractgrupo@gmail.com',
+      timeMin: (new Date()).toISOString(),
+      maxResults: 1,
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
+
+    const event = res.data.items && res.data.items[0];
+    if (event) {
+      return {
+        hangoutLink: event.hangoutLink,
+        summary: event.summary,
+        confirmedAttendees: event.attendees && event.attendees.filter(attendee => {
+          return attendee.responseStatus === 'accepted'
+        }),
+      };
+    } else {
+      console.log('No upcoming event.');
+    }
+  } catch (err) {
+    if (err) return console.log('The API returned an error: ' + err);
+  }
+}
 
 module.exports = async (ctx) => {
-    const auth = await calendar.authenticate(GCALENDAR_CREDENTIALS, GCALENDAR_TOKEN);
-    const meeting = await calendar.nextMeetingLink(auth);
+    const auth = await authenticate(ctx.google.credentials, ctx.google.token);
+    const meeting = await getNextMeetingLink(auth);
 
     if (meeting.summary){
         await ctx.reply(`Evento: ${meeting.summary}`)

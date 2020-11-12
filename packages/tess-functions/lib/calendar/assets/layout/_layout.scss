@@ -1,0 +1,14 @@
+body {
+  background-color: $background;
+  color: $white;
+  display: grid;
+  font-family: $font-family;
+  height: calc(100vh - 100px);
+  margin: 0;
+  place-items: center center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family;
+  font-weight: 300;
+}
