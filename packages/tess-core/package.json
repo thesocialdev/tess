@@ -15,8 +15,7 @@
     "lodash": ">=4.17.11",
     "node-schedule": "^1.3.2",
     "service-runner": "^2.6.17",
-    "tess-calendar": "^0.0.1",
-    "tess-nlp": "^0.0.1",
-    "tess-telegraf": "^0.0.1"
+    "telegraf": "^3.28.0",
+    "tess-functions": "^0.0.1"
   }
 }

@@ -1,7 +1,11 @@
-const telegraf = require("tess-telegraf");
+const telegraf = require("./bot");
+const fs = require('fs');
+const yaml = require("js-yaml");
+const scripts = require('tess-functions')
 
 const initApp = async options => {
-  const app = await telegraf(options);
+  const conf = yaml.load(fs.readFileSync(options.config.telegraf_config, "utf8"));
+  const app = await telegraf(options, scripts, conf);
 
   app.serviceName = options.name; // this app's config options
   app.config = options.config; // this app's config options
@@ -12,7 +16,7 @@ const initApp = async options => {
 };
 
 module.exports = async options => {
-  const app = await initApp();
+  const app = await initApp(options);
   try {
     await app.launch();
     app.logger.log(

@@ -6,6 +6,7 @@ const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require('path');
 const scheduler = require('node-schedule');
+const scripts = require('tess-functions')
 
 const baseDir = path.join(`${__dirname}`, '../');
 
@@ -33,15 +34,16 @@ const filterService = async (services, filter) => {
     }).shift();
 }
 
-const loadCron = async (services, logger) => {
-    fs.readdirSync(`${baseDir}/cron`).map((fname) => {
-        const cron = yaml.load(fs.readFileSync(`${baseDir}/cron/${fname}`, 'utf8'));
-        const { tessModule, schedule, tasks } = cron;
+const loadCron = async (services, path = `${baseDir}cron`) => {
+    fs.readdirSync(path).map((fname) => {
+        const cron = yaml.load(fs.readFileSync(`${path}/${fname}`, 'utf8'));
+        const { tessModule, tasks } = cron;
         if (Array.isArray(tasks) && tasks.length){
             tasks.map(async (task) => {
+                const { schedule } = task;
                 const service = await filterService(services, tessModule);
                 if (service){
-                    const script = task['script'] && tessModule && require(`${baseDir}modules/${tessModule}/scripts/${task['script']}`);
+                    const script = task['script'] && scripts[task['script']];
                     if (script){
                         scheduler.scheduleJob(schedule, function(){
                             script(service, task.parameters);
