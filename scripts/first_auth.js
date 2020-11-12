@@ -1,6 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const path = require('path')
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
@@ -10,7 +11,7 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
-fs.readFile('../../credentials.json', (err, content) => {
+fs.readFile(path.join(__dirname, '../credentials.json'), (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Calendar API.
   authorize(JSON.parse(content));
@@ -22,7 +23,8 @@ fs.readFile('../../credentials.json', (err, content) => {
  * @param {Object} credentials The authorization client credentials.
  */
 function authorize(credentials) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  console.log(credentials)
+  const {client_secret, client_id, redirect_uris} = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
 
@@ -37,9 +39,8 @@ function authorize(credentials) {
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getAccessToken(oAuth2Client, callback) {
+function getAccessToken(oAuth2Client) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
@@ -59,7 +60,6 @@ function getAccessToken(oAuth2Client, callback) {
         if (err) return console.error(err);
         console.log('Token stored to', TOKEN_PATH);
       });
-      callback(oAuth2Client);
     });
   });
 }
