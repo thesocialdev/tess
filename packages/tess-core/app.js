@@ -4,7 +4,7 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const path = require('path');
-const schedule = require('node-schedule');
+const io = require('socket.io');
 
 const loadRoutes = (app, dir) => {
     return new Promise((resolve, reject) => {
@@ -30,11 +30,21 @@ const loadRoutes = (app, dir) => {
 
 function createServer(app) {
     return new Promise((resolve, reject) => {
-        app.listen(app.config.port);
+        const server = app.listen(app.config.port);
+        app.io = io(server);
         app.logger.log('info',
             `${app.serviceName} with PID ${process.pid} listening on ${app.config.interface || '*'}:${app.config.port}`);
         resolve(app);
     });
+}
+
+function registerPubSubHandlers(app) {
+  return new Promise(resolve => {
+    app.io.on('connection', (client) => {
+      app.logger.log('info', 'socket.io server is ready');
+    });
+    resolve(app);
+  })
 }
 
 function initApp(options) {
@@ -69,4 +79,5 @@ module.exports = (options) => {
     return initApp(options)
     .then(app => loadRoutes(app, './routes'))
     .then(createServer)
+      .then(registerPubSubHandlers)
 };

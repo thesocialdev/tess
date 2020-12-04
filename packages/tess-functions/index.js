@@ -4,6 +4,8 @@ nextMeetingLink = require("./functions/actions/nextMeetingLink");
 nextWeekImage = require("./functions/actions/nextWeekImage");
 nlpAction = require("./functions/actions/nlpAction");
 sendMessage = require("./functions/actions/sendMessage");
+sendPubSubNotification = require("./functions/actions/sendPubSubNotification");
+sendWPMessage = require("./functions/actions/sendWPMessage");
 
 module.exports = {
     commandReply,
@@ -12,4 +14,6 @@ module.exports = {
     nextWeekImage,
     nlpAction,
     sendMessage,
+    sendPubSubNotification,
+    sendWPMessage,
 }

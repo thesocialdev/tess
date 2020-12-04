@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 // const authenticate = require('tess-functions/lib/auth');
-// const calendar = require("tess-functions/lib/calendar/index.js");
+// const calendar = require("tess-functions/lib/calendar/say.js");
 
 let app;
 

@@ -1,14 +1,13 @@
 'use strict';
 
 const express = require('express');
-const bodyParser = require("body-parser");
 const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require('path');
 const scheduler = require('node-schedule');
 const scripts = require('tess-functions')
 
-const baseDir = path.join(`${__dirname}`, '../');
+const baseDir = path.join(`${__dirname}`, '../../../../tess-config/');
 
 /**
  * Creates a new router with some default options.
@@ -42,7 +41,7 @@ const loadCron = async (services, path = `${baseDir}cron`) => {
             tasks.map(async (task) => {
                 const { schedule } = task;
                 const service = await filterService(services, tessModule);
-                if (service){
+              if (service){
                     const script = task['script'] && scripts[task['script']];
                     if (script){
                         scheduler.scheduleJob(schedule, function(){
